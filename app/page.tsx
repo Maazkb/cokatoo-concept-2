@@ -118,6 +118,60 @@ function Navbar() {
   )
 }
 
+// ─── Hero Video Placeholder ───────────────────────────────────────────────────
+
+function HeroVideoPlaceholder() {
+  const [modalOpen, setModalOpen] = useState(false)
+
+  return (
+    <>
+      <div className="relative w-full cursor-pointer group" onClick={() => setModalOpen(true)}>
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-200 to-cyan-100 rounded-3xl blur-3xl opacity-50 scale-90 pointer-events-none" />
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-video">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-800 via-teal-700 to-teal-900">
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl">✈️</div>
+                <div className="text-white text-xl font-bold">→</div>
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl">📦</div>
+                <div className="text-white text-xl font-bold">→</div>
+                <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-3xl">🏠</div>
+              </div>
+            </div>
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.div
+              className="w-20 h-20 rounded-full bg-teal-600 flex items-center justify-center shadow-2xl group-hover:bg-teal-500 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Play className="w-8 h-8 text-white ml-1" fill="white" />
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {modalOpen && (
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setModalOpen(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+            <motion.div className="relative w-full max-w-4xl z-10" initial={{ scale: 0.85, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} transition={{ type: 'spring', stiffness: 300, damping: 28 }}>
+              <button onClick={() => setModalOpen(false)} className="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium">
+                <X className="w-5 h-5" /> Close
+              </button>
+              <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl bg-black">
+                <iframe className="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" allow="autoplay; fullscreen" allowFullScreen title="How Cokatoo works" />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
+
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
 const ROUTES = [
@@ -275,9 +329,9 @@ function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Floating card */}
-          <motion.div className="flex justify-center lg:justify-end" initial={{ opacity: 0, x: 40, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.8, delay: 0.25, ease }}>
-            <HeroCard />
+          {/* Right: Video placeholder */}
+          <motion.div className="flex justify-center lg:justify-end w-full" initial={{ opacity: 0, x: 40, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.8, delay: 0.25, ease }}>
+            <HeroVideoPlaceholder />
           </motion.div>
         </div>
 
@@ -804,11 +858,10 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <VideoSection />
+        <LiveRequests />
         <HowItWorks />
         <TrackOrder />
         <FeaturesBento />
-        <LiveRequests />
         <TrustSection />
         <Waitlist />
       </main>
