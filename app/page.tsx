@@ -28,15 +28,20 @@ import {
   Truck,
 } from 'lucide-react'
 
-// ─── Brand tokens ─────────────────────────────────────────────────────────────
+// ─── Brand tokens — strict two-color palette ──────────────────────────────────
 
-const B = {
-  primary: '#6D5A8D',
-  accent: '#6D5A8D',
-  dark: '#1a0f2e',
-  light: '#f0ebf7',
-  white: '#FFFFFF',
-} as const
+const P = '#6D5A8D'   // purple
+const W = '#FFFFFF'   // white
+
+// Derived opacity helpers (inline style strings)
+const p70 = 'rgba(109,90,141,0.70)'  // purple 70% — subtext on white
+const p40 = 'rgba(109,90,141,0.40)'  // purple 40% — muted / borders
+const p20 = 'rgba(109,90,141,0.20)'  // purple 20% — card borders / backgrounds
+const p12 = 'rgba(109,90,141,0.12)'  // purple 12% — very subtle bg
+const w75 = 'rgba(255,255,255,0.75)' // white 75%  — subtext on purple
+const w50 = 'rgba(255,255,255,0.50)' // white 50%  — muted on purple
+const w20 = 'rgba(255,255,255,0.20)' // white 20%  — borders on purple
+const w10 = 'rgba(255,255,255,0.10)' // white 10%  — subtle bg on purple
 
 // ─── Motion presets ───────────────────────────────────────────────────────────
 
@@ -52,7 +57,7 @@ const stagger = {
   show: { transition: { staggerChildren: 0.1 } },
 }
 
-// ─── 1. Navbar ────────────────────────────────────────────────────────────────
+// ─── 1. Navbar — purple bg ────────────────────────────────────────────────────
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -68,8 +73,8 @@ function Navbar() {
     <motion.header
       className="fixed inset-x-0 top-0 z-50 transition-shadow duration-300"
       style={{
-        backgroundColor: B.primary,
-        boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.25)' : 'none',
+        backgroundColor: P,
+        boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.20)' : 'none',
       }}
       initial={{ y: -72, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -78,7 +83,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <a href="#" className="flex items-center">
-          <span className="text-xl font-semibold text-white tracking-tight">
+          <span className="text-xl font-semibold tracking-tight" style={{ color: W }}>
             cokatoo
           </span>
         </a>
@@ -89,7 +94,8 @@ function Navbar() {
             <a
               key={link}
               href="#"
-              className="px-4 py-2 text-sm font-semibold text-white rounded-lg transition-opacity hover:opacity-75"
+              className="px-4 py-2 text-sm font-semibold rounded-lg transition-opacity hover:opacity-70"
+              style={{ color: W }}
             >
               {link}
             </a>
@@ -101,13 +107,14 @@ function Navbar() {
           <a
             href="#waitlist"
             className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-full transition-opacity hover:opacity-90"
-            style={{ backgroundColor: B.white, color: B.primary }}
+            style={{ backgroundColor: W, color: P }}
           >
             Explore
           </a>
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg text-white"
+            className="md:hidden p-2 rounded-lg"
+            style={{ color: W }}
             aria-label="Toggle menu"
           >
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -125,17 +132,15 @@ function Navbar() {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22 }}
             className="md:hidden overflow-hidden border-t"
-            style={{
-              backgroundColor: B.primary,
-              borderColor: 'rgba(255,255,255,0.15)',
-            }}
+            style={{ backgroundColor: P, borderColor: w20 }}
           >
             <nav className="px-5 py-4 flex flex-col gap-1">
               {['About', 'Contact'].map((link) => (
                 <a
                   key={link}
                   href="#"
-                  className="px-3 py-2.5 text-sm font-semibold rounded-lg text-white hover:opacity-75 transition-opacity"
+                  className="px-3 py-2.5 text-sm font-semibold rounded-lg transition-opacity hover:opacity-75"
+                  style={{ color: W }}
                 >
                   {link}
                 </a>
@@ -143,7 +148,7 @@ function Navbar() {
               <a
                 href="#waitlist"
                 className="mt-2 py-3 text-sm font-semibold rounded-xl text-center"
-                style={{ backgroundColor: B.white, color: B.primary }}
+                style={{ backgroundColor: W, color: P }}
               >
                 Explore
               </a>
@@ -155,7 +160,7 @@ function Navbar() {
   )
 }
 
-// ─── 2. Hero ──────────────────────────────────────────────────────────────────
+// ─── 2. Hero — purple bg ──────────────────────────────────────────────────────
 
 const ROUTES = [
   { from: '🇦🇪 Dubai', to: '🇵🇰 Lahore' },
@@ -176,14 +181,13 @@ function Hero() {
     <section
       ref={heroRef}
       className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-16"
-      style={{ backgroundColor: B.dark }}
+      style={{ backgroundColor: P }}
     >
-      {/* Background glow */}
+      {/* Subtle white glow for depth */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'radial-gradient(ellipse 80% 70% at 65% 55%, rgba(133,101,166,0.18) 0%, transparent 70%)',
+          background: `radial-gradient(ellipse 70% 60% at 65% 50%, ${w10} 0%, transparent 70%)`,
         }}
       />
 
@@ -201,37 +205,38 @@ function Hero() {
           >
             <motion.div variants={fadeUp}>
               <span
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold text-white"
-                style={{ backgroundColor: B.primary }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold"
+                style={{ backgroundColor: w20, color: W }}
               >
-                ✈️ Fly and earn
+                Shop global
               </span>
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="text-5xl sm:text-6xl lg:text-[64px] font-semibold leading-[1.08] tracking-tight text-white"
+              className="text-5xl sm:text-6xl lg:text-[64px] font-semibold leading-[1.08] tracking-tight"
+              style={{ color: W }}
             >
-              Deliver brands,<br />not just baggage.
+              Delivered by people,<br />not packages.
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
               className="text-lg leading-relaxed max-w-lg"
-              style={{ color: '#c4b8d8' }}
+              style={{ color: w75 }}
             >
-              Turn your extra luggage space into extra cash. Help global shoppers
-              get the brands they love while you travel, with secure payments and
-              verified requests.
+              With Cokatoo, you don't need an overseas address — just a link. We'll
+              match you with trusted travelers flying to your country who
+              hand-deliver your items.
             </motion.p>
 
             <motion.div variants={fadeUp}>
               <a
                 href="#waitlist"
-                className="inline-flex items-center gap-2 px-8 py-3.5 text-white font-semibold rounded-full text-[15px] transition-opacity hover:opacity-90"
-                style={{ backgroundColor: B.primary }}
+                className="inline-flex items-center gap-2 px-8 py-3.5 font-semibold rounded-full text-[15px] transition-opacity hover:opacity-90"
+                style={{ backgroundColor: W, color: P }}
               >
-                Start Traveling
+                Explore how it works
                 <ArrowRight className="w-4 h-4" />
               </a>
             </motion.div>
@@ -249,37 +254,18 @@ function Hero() {
               <motion.div
                 className="absolute top-0 right-0 w-56 h-[420px] sm:w-[260px] sm:h-[480px] rounded-3xl overflow-hidden shadow-2xl"
                 animate={{ y: [0, -12, 0] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 6,
-                  ease: 'easeInOut',
-                  delay: 0.6,
-                }}
+                transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 0.6 }}
               >
-                <Image
-                  src="/1x/Asset%2065.png"
-                  alt="Cokatoo app"
-                  fill
-                  className="object-cover"
-                />
+                <Image src="/1x/Asset%2065.png" alt="Cokatoo app" fill className="object-cover" />
               </motion.div>
               {/* Front phone — Asset 64 */}
               <motion.div
                 className="absolute bottom-0 left-0 w-56 h-[420px] sm:w-[260px] sm:h-[480px] rounded-3xl overflow-hidden shadow-2xl"
-                style={{ border: '2px solid rgba(255,255,255,0.12)' }}
+                style={{ border: `2px solid ${w20}` }}
                 animate={{ y: [0, 12, 0] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 5.5,
-                  ease: 'easeInOut',
-                }}
+                transition={{ repeat: Infinity, duration: 5.5, ease: 'easeInOut' }}
               >
-                <Image
-                  src="/1x/Asset%2064.png"
-                  alt="Cokatoo app"
-                  fill
-                  className="object-cover"
-                />
+                <Image src="/1x/Asset%2064.png" alt="Cokatoo app" fill className="object-cover" />
               </motion.div>
             </div>
           </motion.div>
@@ -296,19 +282,11 @@ function Hero() {
             <motion.div
               key={i}
               className="flex items-center gap-2.5 px-4 py-2 rounded-full text-sm font-medium border"
-              style={{
-                color: 'rgba(255,255,255,0.80)',
-                borderColor: 'rgba(255,255,255,0.15)',
-                backgroundColor: 'rgba(255,255,255,0.05)',
-              }}
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: 'rgba(255,255,255,0.10)',
-                transition: { duration: 0.18 },
-              }}
+              style={{ color: w75, borderColor: w20, backgroundColor: w10 }}
+              whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)', transition: { duration: 0.18 } }}
             >
               <span>{r.from}</span>
-              <Plane className="w-3.5 h-3.5" style={{ color: B.accent }} />
+              <Plane className="w-3.5 h-3.5" style={{ color: W }} />
               <span>{r.to}</span>
             </motion.div>
           ))}
@@ -318,57 +296,15 @@ function Hero() {
   )
 }
 
-// ─── 3. Curiosity — What people are buying ────────────────────────────────────
+// ─── 3. Curiosity — white bg ──────────────────────────────────────────────────
 
 const PRODUCTS = [
-  {
-    name: 'iPhone 15 Pro Max',
-    from: 'Dubai',
-    to: 'Lahore',
-    value: '$1,299',
-    reward: '$25',
-    initial: 'AK',
-  },
-  {
-    name: 'Rolex Day-Date',
-    from: 'London',
-    to: 'Karachi',
-    value: '$8,500',
-    reward: '$200',
-    initial: 'SR',
-  },
-  {
-    name: 'Nike Air Jordan 1 Retro',
-    from: 'NYC',
-    to: 'Islamabad',
-    value: '$221',
-    reward: '$35',
-    initial: 'HR',
-  },
-  {
-    name: 'MacBook Pro M4',
-    from: 'Toronto',
-    to: 'Lahore',
-    value: '$1,999',
-    reward: '$80',
-    initial: 'ZA',
-  },
-  {
-    name: 'Dyson Airwrap',
-    from: 'London',
-    to: 'Karachi',
-    value: '$599',
-    reward: '$45',
-    initial: 'MP',
-  },
-  {
-    name: 'Sony PS5',
-    from: 'Tokyo',
-    to: 'Dubai',
-    value: '$499',
-    reward: '$40',
-    initial: 'YT',
-  },
+  { name: 'iPhone 15 Pro Max', from: 'Dubai', to: 'Lahore', value: '$1,299', reward: '$25', initial: 'AK' },
+  { name: 'Rolex Day-Date', from: 'London', to: 'Karachi', value: '$8,500', reward: '$200', initial: 'SR' },
+  { name: 'Nike Air Jordan 1 Retro', from: 'NYC', to: 'Islamabad', value: '$221', reward: '$35', initial: 'HR' },
+  { name: 'MacBook Pro M4', from: 'Toronto', to: 'Lahore', value: '$1,999', reward: '$80', initial: 'ZA' },
+  { name: 'Dyson Airwrap', from: 'London', to: 'Karachi', value: '$599', reward: '$45', initial: 'MP' },
+  { name: 'Sony PS5', from: 'Tokyo', to: 'Dubai', value: '$499', reward: '$40', initial: 'YT' },
 ]
 
 function CuriositySection() {
@@ -376,7 +312,7 @@ function CuriositySection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="py-28 bg-white">
+    <section ref={ref} className="py-28" style={{ backgroundColor: W }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <motion.div
           className="text-center mb-14"
@@ -384,15 +320,11 @@ function CuriositySection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease }}
         >
-          <h2
-            className="text-4xl sm:text-5xl font-semibold mb-4"
-            style={{ color: B.primary }}
-          >
+          <h2 className="text-4xl sm:text-5xl font-semibold mb-4" style={{ color: P }}>
             What people are buying right now
           </h2>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Real requests from real shoppers — earn extra on trips you are
-            already taking.
+          <p className="text-lg max-w-xl mx-auto" style={{ color: p70 }}>
+            Real requests from real shoppers — earn extra on trips you are already taking.
           </p>
         </motion.div>
 
@@ -402,76 +334,48 @@ function CuriositySection() {
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
         >
-          {PRODUCTS.map((p, i) => (
+          {PRODUCTS.map((prod, i) => (
             <motion.div
               key={i}
               variants={fadeUp}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
               className="rounded-2xl border p-6 cursor-pointer transition-shadow hover:shadow-xl"
-              style={{ borderColor: 'rgba(59,40,95,0.12)' }}
+              style={{ borderColor: p20, backgroundColor: W }}
             >
               {/* Shopper avatar */}
               <div className="flex items-start gap-3 mb-5">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-white flex-shrink-0"
-                  style={{ backgroundColor: B.primary }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
+                  style={{ backgroundColor: P, color: W }}
                 >
-                  {p.initial}
+                  {prod.initial}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900 leading-tight">
-                    {p.name}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Verified shopper
-                  </p>
+                  <p className="font-semibold leading-tight" style={{ color: P }}>{prod.name}</p>
+                  <p className="text-xs mt-0.5" style={{ color: p40 }}>Verified shopper</p>
                 </div>
               </div>
 
               {/* Route */}
               <div className="flex items-center gap-2 mb-5">
-                <span className="text-sm font-medium text-gray-700">
-                  {p.from}
-                </span>
+                <span className="text-sm font-medium" style={{ color: P }}>{prod.from}</span>
                 <div className="flex-1 flex items-center gap-1">
-                  <div
-                    className="flex-1 border-t border-dashed"
-                    style={{ borderColor: B.accent + '70' }}
-                  />
-                  <Plane
-                    className="w-3.5 h-3.5 flex-shrink-0"
-                    style={{ color: B.accent }}
-                  />
-                  <div
-                    className="flex-1 border-t border-dashed"
-                    style={{ borderColor: B.accent + '70' }}
-                  />
+                  <div className="flex-1 border-t border-dashed" style={{ borderColor: p40 }} />
+                  <Plane className="w-3.5 h-3.5 flex-shrink-0" style={{ color: P }} />
+                  <div className="flex-1 border-t border-dashed" style={{ borderColor: p40 }} />
                 </div>
-                <span className="text-sm font-medium text-gray-700">
-                  {p.to}
-                </span>
+                <span className="text-sm font-medium" style={{ color: P }}>{prod.to}</span>
               </div>
 
               {/* Value + Reward */}
               <div className="flex items-end justify-between">
                 <div>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-                    Item value
-                  </p>
-                  <p className="text-sm font-semibold text-gray-700 mt-0.5">
-                    {p.value}
-                  </p>
+                  <p className="text-[10px] uppercase tracking-widest" style={{ color: p40 }}>Item value</p>
+                  <p className="text-sm font-semibold mt-0.5" style={{ color: p70 }}>{prod.value}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-                    Reward
-                  </p>
-                  <p
-                    className="text-2xl font-semibold"
-                    style={{ color: B.primary }}
-                  >
-                    {p.reward}
-                  </p>
+                  <p className="text-[10px] uppercase tracking-widest" style={{ color: p40 }}>Reward</p>
+                  <p className="text-2xl font-semibold" style={{ color: P }}>{prod.reward}</p>
                 </div>
               </div>
             </motion.div>
@@ -482,43 +386,26 @@ function CuriositySection() {
   )
 }
 
-// ─── 4. How It Works ──────────────────────────────────────────────────────────
+// ─── 4. How It Works — purple bg ─────────────────────────────────────────────
 
 const SHOPPER_STEPS = [
-  {
-    num: 1,
-    title: 'Post your request with product link',
-    desc: 'Share the product URL, set your reward, and let verified travelers find you.',
-  },
-  {
-    num: 2,
-    title: 'Get matched with a verified traveler',
-    desc: 'We connect you with a trusted traveler already heading your way.',
-  },
-  {
-    num: 3,
-    title: 'Receive your item and release payment',
-    desc: 'Confirm arrival and escrow payment releases automatically.',
-  },
+  { num: 1, title: 'Paste a product link', desc: 'Add the product URL from any global brand.' },
+  { num: 2, title: 'Set your offer', desc: 'Name your price, include item cost, delivery reward, and any extras.' },
+  { num: 3, title: 'Get matched with a traveler', desc: 'A traveler heading your way accepts the request.' },
+  { num: 4, title: 'Track and receive', desc: 'Stay updated until the product is in your hands.' },
 ]
 
 const TRAVELER_STEPS = [
-  {
-    num: 1,
-    title: 'List your upcoming trip and route',
-    desc: 'Add your travel dates and route so shoppers can find you.',
-  },
-  {
-    num: 2,
-    title: 'Browse matching shopper requests',
-    desc: 'See open requests along your route and pick what fits your luggage.',
-  },
-  {
-    num: 3,
-    title: 'Deliver and earn your reward',
-    desc: 'Hand over the item and collect your reward instantly upon delivery.',
-  },
+  { num: 1, title: 'Add your upcoming trip', desc: 'Enter your travel dates and destination.' },
+  { num: 2, title: 'Browse shopper requests', desc: 'View product requests matching your route.' },
+  { num: 3, title: 'Accept and buy', desc: 'Negotiate if needed, purchase the product.' },
+  { num: 4, title: 'Deliver and earn', desc: 'Meet the buyer, deliver the product, and get paid.' },
 ]
+
+const TAB_HEADLINES = {
+  shopper: 'Shop Your Favorite Brands, No Matter Where You Are',
+  traveler: 'Fly, Deliver, and Earn on Every Trip',
+}
 
 function HowItWorks() {
   const [tab, setTab] = useState<'shopper' | 'traveler'>('shopper')
@@ -527,7 +414,7 @@ function HowItWorks() {
   const steps = tab === 'shopper' ? SHOPPER_STEPS : TRAVELER_STEPS
 
   return (
-    <section ref={ref} className="py-28" style={{ backgroundColor: B.light }}>
+    <section ref={ref} className="py-28" style={{ backgroundColor: P }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <motion.div
           className="text-center mb-12"
@@ -535,31 +422,25 @@ function HowItWorks() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease }}
         >
-          <h2
-            className="text-4xl sm:text-5xl font-semibold mb-10"
-            style={{ color: B.primary }}
-          >
-            How Cokatoo Works
+          <h2 className="text-4xl sm:text-5xl font-semibold mb-10" style={{ color: W }}>
+            {TAB_HEADLINES[tab]}
           </h2>
 
           {/* Toggle pills */}
           <div className="flex justify-center">
-            <div
-              className="flex rounded-full p-1 gap-1"
-              style={{ backgroundColor: 'rgba(59,40,95,0.10)' }}
-            >
+            <div className="flex rounded-full p-1 gap-1" style={{ backgroundColor: w20 }}>
               {(['shopper', 'traveler'] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTab(t)}
                   className="relative px-7 py-2.5 text-sm font-semibold rounded-full transition-colors duration-200"
-                  style={{ color: tab === t ? B.white : B.primary }}
+                  style={{ color: tab === t ? P : W }}
                 >
                   {tab === t && (
                     <motion.span
                       layoutId="how-tab"
                       className="absolute inset-0 rounded-full"
-                      style={{ backgroundColor: B.primary }}
+                      style={{ backgroundColor: W }}
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
@@ -575,7 +456,7 @@ function HowItWorks() {
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
-            className="grid md:grid-cols-3 gap-8"
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -584,21 +465,22 @@ function HowItWorks() {
             {steps.map((step, i) => (
               <motion.div
                 key={step.num}
-                className="flex flex-col items-center text-center p-8 rounded-2xl bg-white shadow-sm"
+                className="flex flex-col items-center text-center p-8 rounded-2xl"
+                style={{ backgroundColor: W }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.12, duration: 0.4 }}
               >
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-semibold mb-6"
-                  style={{ backgroundColor: B.primary }}
+                  className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-semibold mb-6"
+                  style={{ backgroundColor: P, color: W }}
                 >
                   {step.num}
                 </div>
-                <h3 className="font-semibold text-gray-900 text-lg mb-3 leading-snug">
+                <h3 className="font-semibold text-lg mb-3 leading-snug" style={{ color: P }}>
                   {step.title}
                 </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
+                <p className="text-sm leading-relaxed" style={{ color: p70 }}>
                   {step.desc}
                 </p>
               </motion.div>
@@ -610,7 +492,7 @@ function HowItWorks() {
   )
 }
 
-// ─── 5. Track Your Order ──────────────────────────────────────────────────────
+// ─── 5. Track Your Order — white bg ───────────────────────────────────────────
 
 const STAGES = [
   { icon: Package, label: 'Request Posted' },
@@ -638,7 +520,7 @@ function TrackOrder() {
   }, [inView])
 
   return (
-    <section className="py-28 bg-white">
+    <section className="py-28" style={{ backgroundColor: W }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <motion.div
           className="text-center mb-16"
@@ -647,10 +529,7 @@ function TrackOrder() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.55, ease }}
         >
-          <h2
-            className="text-4xl sm:text-5xl font-semibold"
-            style={{ color: B.primary }}
-          >
+          <h2 className="text-4xl sm:text-5xl font-semibold" style={{ color: P }}>
             Track every step of your delivery
           </h2>
         </motion.div>
@@ -659,17 +538,13 @@ function TrackOrder() {
           {/* Connecting line */}
           <div
             className="absolute top-7 left-0 right-0 h-0.5 hidden lg:block"
-            style={{ backgroundColor: '#e5e7eb', zIndex: 0 }}
+            style={{ backgroundColor: p20, zIndex: 0 }}
           >
             <motion.div
               className="h-full origin-left"
-              style={{ backgroundColor: B.primary }}
+              style={{ backgroundColor: P }}
               initial={{ scaleX: 0 }}
-              animate={
-                inView
-                  ? { scaleX: active < 0 ? 0 : active / (STAGES.length - 1) }
-                  : { scaleX: 0 }
-              }
+              animate={inView ? { scaleX: active < 0 ? 0 : active / (STAGES.length - 1) } : { scaleX: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
             />
           </div>
@@ -689,20 +564,20 @@ function TrackOrder() {
                   <motion.div
                     className="w-14 h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-500"
                     style={{
-                      backgroundColor: done ? B.primary : B.white,
-                      borderColor: done ? B.primary : '#e5e7eb',
+                      backgroundColor: done ? P : W,
+                      borderColor: done ? P : p20,
                     }}
                     animate={done ? { scale: [1, 1.12, 1] } : { scale: 1 }}
                     transition={{ duration: 0.35, delay: i * 0.12 }}
                   >
                     <Icon
                       className="w-6 h-6 transition-colors duration-500"
-                      style={{ color: done ? B.white : '#d1d5db' }}
+                      style={{ color: done ? W : p40 }}
                     />
                   </motion.div>
                   <p
                     className="text-sm font-semibold leading-tight transition-colors duration-500"
-                    style={{ color: done ? B.primary : '#9ca3af' }}
+                    style={{ color: done ? P : p40 }}
                   >
                     {stage.label}
                   </p>
@@ -716,39 +591,15 @@ function TrackOrder() {
   )
 }
 
-// ─── 6. Do More With Cokatoo ─────────────────────────────────────────────────
+// ─── 6. Do More With Cokatoo — purple bg ─────────────────────────────────────
 
 const DO_MORE = [
-  {
-    icon: Wallet,
-    title: 'Save on Shipping Costs',
-    desc: 'Pay a small reward — far less than international shipping fees.',
-  },
-  {
-    icon: Globe,
-    title: 'Access Global Products',
-    desc: 'Get anything from anywhere in the world delivered to your door.',
-  },
-  {
-    icon: Zap,
-    title: 'Fast Delivery',
-    desc: 'Travelers move faster than couriers. Get your item in days, not weeks.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Verified Travelers Only',
-    desc: 'Multi-step ID verification, background checks, and ratings.',
-  },
-  {
-    icon: Lock,
-    title: 'Secure Escrow Payments',
-    desc: 'Funds are held safely until you confirm your item arrived.',
-  },
-  {
-    icon: MapPin,
-    title: 'Real Time Tracking',
-    desc: 'Track your request from posting to doorstep delivery.',
-  },
+  { icon: Wallet, title: 'Save on Shipping Costs', desc: 'Pay a small reward — far less than international shipping fees.' },
+  { icon: Globe, title: 'Access Global Products', desc: 'Get anything from anywhere in the world delivered to your door.' },
+  { icon: Zap, title: 'Fast Delivery', desc: 'Travelers move faster than couriers. Get your item in days, not weeks.' },
+  { icon: ShieldCheck, title: 'Verified Travelers Only', desc: 'Multi-step ID verification, background checks, and ratings.' },
+  { icon: Lock, title: 'Secure Escrow Payments', desc: 'Funds are held safely until you confirm your item arrived.' },
+  { icon: MapPin, title: 'Real Time Tracking', desc: 'Track your request from posting to doorstep delivery.' },
 ]
 
 function DoMore() {
@@ -756,7 +607,7 @@ function DoMore() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="py-28" style={{ backgroundColor: B.dark }}>
+    <section ref={ref} className="py-28" style={{ backgroundColor: P }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <motion.div
           className="text-center mb-14"
@@ -764,7 +615,7 @@ function DoMore() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease }}
         >
-          <h2 className="text-4xl sm:text-5xl font-semibold text-white">
+          <h2 className="text-4xl sm:text-5xl font-semibold" style={{ color: W }}>
             Do more with Cokatoo
           </h2>
         </motion.div>
@@ -782,23 +633,16 @@ function DoMore() {
                 key={i}
                 variants={fadeUp}
                 className="p-7 rounded-2xl border cursor-default"
-                style={{
-                  borderColor: B.primary + '80',
-                  backgroundColor: 'rgba(59,40,95,0.20)',
-                }}
+                style={{ borderColor: w20, backgroundColor: w10 }}
               >
                 <div
                   className="w-11 h-11 rounded-xl flex items-center justify-center mb-5"
-                  style={{ backgroundColor: 'rgba(133,101,166,0.22)' }}
+                  style={{ backgroundColor: w20 }}
                 >
-                  <Icon className="w-5 h-5" style={{ color: B.accent }} />
+                  <Icon className="w-5 h-5" style={{ color: W }} />
                 </div>
-                <h3 className="font-semibold text-white text-lg mb-2">
-                  {f.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: '#a89bbf' }}>
-                  {f.desc}
-                </p>
+                <h3 className="font-semibold text-lg mb-2" style={{ color: W }}>{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: w75 }}>{f.desc}</p>
               </motion.div>
             )
           })}
@@ -808,7 +652,7 @@ function DoMore() {
   )
 }
 
-// ─── 7. Trust Section ────────────────────────────────────────────────────────
+// ─── 7. Trust Section — white bg ─────────────────────────────────────────────
 
 function TrustSection() {
   const ref = useRef<HTMLElement>(null)
@@ -839,9 +683,30 @@ function TrustSection() {
   ]
 
   return (
-    <section ref={ref} className="py-28 bg-white">
+    <section ref={ref} className="py-28" style={{ backgroundColor: W }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        {/* Stats */}
+        {/* Headline block */}
+        <motion.div
+          className="text-center max-w-2xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, ease }}
+        >
+          <h2 className="text-4xl sm:text-5xl font-semibold mb-4" style={{ color: P }}>
+            Trusted by a global community
+          </h2>
+          <p className="text-xl font-semibold mb-5" style={{ color: P }}>
+            Built on trust, powered by people.
+          </p>
+          <p className="text-base leading-relaxed" style={{ color: p70 }}>
+            At Cokatoo, every transaction is backed by real people and real journeys. Our growing
+            community of verified buyers and travelers ensures a safe, transparent, and supportive
+            experience — where mutual trust leads to shared value. From ratings to secure payments,
+            every feature is designed to build confidence and accountability.
+          </p>
+        </motion.div>
+
+        {/* Stats — purple cards on white section */}
         <motion.div
           className="grid sm:grid-cols-3 gap-5 mb-20"
           variants={stagger}
@@ -853,15 +718,12 @@ function TrustSection() {
               key={i}
               variants={fadeUp}
               className="text-center py-10 px-6 rounded-2xl"
-              style={{ backgroundColor: B.light }}
+              style={{ backgroundColor: P }}
             >
-              <div
-                className="text-5xl sm:text-6xl font-semibold mb-2"
-                style={{ color: B.primary }}
-              >
+              <div className="text-5xl sm:text-6xl font-semibold mb-2" style={{ color: W }}>
                 {s.value}
               </div>
-              <p className="font-semibold text-gray-700">{s.label}</p>
+              <p className="font-semibold" style={{ color: w75 }}>{s.label}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -873,27 +735,23 @@ function TrustSection() {
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
         >
-          {pillars.map((p, i) => {
-            const Icon = p.icon
+          {pillars.map((pillar, i) => {
+            const Icon = pillar.icon
             return (
               <motion.div
                 key={i}
                 variants={fadeUp}
                 className="p-8 rounded-2xl border"
-                style={{ borderColor: 'rgba(59,40,95,0.12)' }}
+                style={{ borderColor: p20 }}
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-6"
-                  style={{ backgroundColor: B.light }}
+                  style={{ backgroundColor: p12 }}
                 >
-                  <Icon className="w-6 h-6" style={{ color: B.primary }} />
+                  <Icon className="w-6 h-6" style={{ color: P }} />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-xl mb-3">
-                  {p.title}
-                </h3>
-                <p className="text-gray-500 leading-relaxed text-[15px]">
-                  {p.desc}
-                </p>
+                <h3 className="font-semibold text-xl mb-3" style={{ color: P }}>{pillar.title}</h3>
+                <p className="leading-relaxed text-[15px]" style={{ color: p70 }}>{pillar.desc}</p>
               </motion.div>
             )
           })}
@@ -903,30 +761,27 @@ function TrustSection() {
   )
 }
 
-// ─── 8. Testimonials ─────────────────────────────────────────────────────────
+// ─── 8. Testimonials — purple bg ─────────────────────────────────────────────
 
 const TESTIMONIALS = [
   {
     name: 'Sarah K',
     route: 'Dubai to Lahore',
-    quote:
-      'Got my Dyson Airwrap in perfect condition. The traveler was so professional.',
+    quote: 'Got my Dyson Airwrap in perfect condition. The traveler was so professional.',
     stars: 5,
     initial: 'SK',
   },
   {
     name: 'Ahmed R',
     route: 'London to Karachi',
-    quote:
-      'Made $180 on my last trip just by carrying two small items. Totally worth it.',
+    quote: 'Made $180 on my last trip just by carrying two small items. Totally worth it.',
     stars: 5,
     initial: 'AR',
   },
   {
     name: 'Priya M',
     route: 'NYC to Islamabad',
-    quote:
-      'Finally got the Nike Dunks that are not available here. Seamless experience.',
+    quote: 'Finally got the Nike Dunks that are not available here. Seamless experience.',
     stars: 5,
     initial: 'PM',
   },
@@ -937,7 +792,7 @@ function Testimonials() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section ref={ref} className="py-28" style={{ backgroundColor: B.light }}>
+    <section ref={ref} className="py-28" style={{ backgroundColor: P }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <motion.div
           className="text-center mb-14"
@@ -945,10 +800,7 @@ function Testimonials() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease }}
         >
-          <h2
-            className="text-4xl sm:text-5xl font-semibold"
-            style={{ color: B.primary }}
-          >
+          <h2 className="text-4xl sm:text-5xl font-semibold" style={{ color: W }}>
             What our community says
           </h2>
         </motion.div>
@@ -963,29 +815,27 @@ function Testimonials() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="bg-white p-8 rounded-2xl shadow-sm"
+              className="p-8 rounded-2xl"
+              style={{ backgroundColor: W }}
             >
               <div className="flex items-center gap-3 mb-5">
                 <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0"
-                  style={{ backgroundColor: B.primary }}
+                  className="w-11 h-11 rounded-full flex items-center justify-center font-semibold flex-shrink-0"
+                  style={{ backgroundColor: P, color: W }}
                 >
                   {t.initial}
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{t.name}</p>
-                  <p className="text-sm text-gray-400">{t.route}</p>
+                  <p className="font-semibold" style={{ color: P }}>{t.name}</p>
+                  <p className="text-sm" style={{ color: p70 }}>{t.route}</p>
                 </div>
               </div>
               <div className="flex gap-0.5 mb-4">
                 {[...Array(t.stars)].map((_, j) => (
-                  <Star
-                    key={j}
-                    className="w-4 h-4 fill-amber-400 text-amber-400"
-                  />
+                  <Star key={j} className="w-4 h-4" style={{ color: P, fill: P }} />
                 ))}
               </div>
-              <p className="text-gray-600 leading-relaxed">"{t.quote}"</p>
+              <p className="leading-relaxed" style={{ color: p70 }}>"{t.quote}"</p>
             </motion.div>
           ))}
         </motion.div>
@@ -994,7 +844,7 @@ function Testimonials() {
   )
 }
 
-// ─── 9. Waitlist CTA ─────────────────────────────────────────────────────────
+// ─── 9. Waitlist CTA — white bg ───────────────────────────────────────────────
 
 function Waitlist() {
   const [email, setEmail] = useState('')
@@ -1006,28 +856,14 @@ function Waitlist() {
   }
 
   return (
-    <section
-      id="waitlist"
-      className="relative py-28 overflow-hidden"
-      style={{ backgroundColor: B.primary }}
-    >
-      {/* Dot pattern */}
+    <section id="waitlist" className="relative py-28 overflow-hidden" style={{ backgroundColor: W }}>
+      {/* Subtle dot texture */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.08]"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'radial-gradient(circle, white 1.5px, transparent 1.5px)',
+          backgroundImage: `radial-gradient(circle, ${p12} 1.5px, transparent 1.5px)`,
           backgroundSize: '32px 32px',
         }}
-      />
-      {/* Glow blobs */}
-      <div
-        className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-30 pointer-events-none"
-        style={{ backgroundColor: B.accent }}
-      />
-      <div
-        className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full blur-3xl opacity-20 pointer-events-none"
-        style={{ backgroundColor: B.dark }}
       />
 
       <div className="relative max-w-2xl mx-auto px-5 sm:px-8 text-center">
@@ -1037,11 +873,16 @@ function Waitlist() {
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease }}
         >
-          <h2 className="text-4xl sm:text-5xl font-semibold text-white mb-4 leading-tight">
-            Be the first to experience Cokatoo.
+          <h2 className="text-4xl sm:text-5xl font-semibold mb-3 leading-tight" style={{ color: P }}>
+            Launching Soon
           </h2>
-          <p className="text-lg mb-10" style={{ color: '#c4b5d4' }}>
-            Join our waitlist and get early access to the platform.
+          <p className="text-xl font-semibold mb-4" style={{ color: P }}>
+            A new way to shop, travel and earn
+          </p>
+          <p className="text-base leading-relaxed mb-10" style={{ color: p70 }}>
+            Get ready for an exciting experience where shopping and traveling meet opportunity.
+            With Cokatoo, you can place orders, deliver products, and earn rewards — all in one
+            simple app.
           </p>
 
           <AnimatePresence mode="wait">
@@ -1059,18 +900,20 @@ function Waitlist() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="flex-1 px-5 py-3.5 rounded-full text-white text-sm focus:outline-none"
+                  className="flex-1 px-5 py-3.5 rounded-full text-sm focus:outline-none focus:ring-2"
                   style={{
-                    backgroundColor: 'rgba(255,255,255,0.12)',
-                    border: '1px solid rgba(255,255,255,0.25)',
-                  }}
+                    backgroundColor: p12,
+                    border: `1px solid ${p40}`,
+                    color: P,
+                    focusRingColor: P,
+                  } as React.CSSProperties}
                 />
                 <button
                   type="submit"
                   className="px-6 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: B.white, color: B.primary }}
+                  style={{ backgroundColor: P, color: W }}
                 >
-                  Join Waitlist
+                  Notify Me
                 </button>
               </motion.form>
             ) : (
@@ -1079,13 +922,11 @@ function Waitlist() {
                 initial={{ opacity: 0, scale: 0.88 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/20 text-white"
-                style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full border"
+                style={{ borderColor: p40, backgroundColor: p12, color: P }}
               >
                 <span className="text-xl">🎉</span>
-                <span className="font-semibold">
-                  You're on the list! We'll be in touch soon.
-                </span>
+                <span className="font-semibold">You're on the list! We'll be in touch soon.</span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -1096,20 +937,15 @@ function Waitlist() {
               {['JK', 'AM', 'SR', 'LP', 'MN'].map((init, i) => (
                 <div
                   key={init}
-                  className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[9px] font-bold text-white"
-                  style={{
-                    backgroundColor: B.accent,
-                    borderColor: B.primary,
-                    zIndex: 5 - i,
-                  }}
+                  className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-[9px] font-bold"
+                  style={{ backgroundColor: P, borderColor: W, color: W, zIndex: 5 - i }}
                 >
                   {init}
                 </div>
               ))}
             </div>
-            <p className="text-sm" style={{ color: '#c4b5d4' }}>
-              <span className="font-semibold text-white">2,400+</span> already
-              waiting
+            <p className="text-sm" style={{ color: p70 }}>
+              <span className="font-semibold" style={{ color: P }}>2,400+</span> already waiting
             </p>
           </div>
         </motion.div>
@@ -1118,24 +954,19 @@ function Waitlist() {
   )
 }
 
-// ─── 10. Footer ───────────────────────────────────────────────────────────────
+// ─── 10. Footer — purple bg ───────────────────────────────────────────────────
 
 function Footer() {
   return (
-    <footer style={{ backgroundColor: B.dark }}>
+    <footer style={{ backgroundColor: P }}>
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16">
         <div className="flex flex-col md:flex-row md:items-start gap-10 mb-12">
           {/* Brand */}
           <div className="flex-1">
-            <div className="relative h-8 w-32 mb-4">
-              <Image
-                src="/1x/Asset%2065.png"
-                alt="Cokatoo"
-                fill
-                className="object-contain object-left brightness-0 invert"
-              />
-            </div>
-            <p className="text-sm max-w-[220px]" style={{ color: '#a89bbf' }}>
+            <span className="text-xl font-semibold tracking-tight block mb-4" style={{ color: W }}>
+              cokatoo
+            </span>
+            <p className="text-sm max-w-[220px]" style={{ color: w75 }}>
               Connecting the world one suitcase at a time.
             </p>
           </div>
@@ -1147,16 +978,14 @@ function Footer() {
               { heading: 'Legal', links: ['Terms', 'Privacy'] },
             ].map(({ heading, links }) => (
               <div key={heading}>
-                <h4 className="text-white font-semibold text-sm mb-4">
-                  {heading}
-                </h4>
+                <h4 className="font-semibold text-sm mb-4" style={{ color: W }}>{heading}</h4>
                 <ul className="space-y-3">
                   {links.map((l) => (
                     <li key={l}>
                       <a
                         href="#"
-                        className="text-sm transition-colors hover:text-white"
-                        style={{ color: '#a89bbf' }}
+                        className="text-sm transition-opacity hover:opacity-100"
+                        style={{ color: w75 }}
                       >
                         {l}
                       </a>
@@ -1168,12 +997,9 @@ function Footer() {
           </div>
         </div>
 
-        <div
-          className="pt-8 border-t"
-          style={{ borderColor: 'rgba(255,255,255,0.08)' }}
-        >
-          <p className="text-sm" style={{ color: '#6b5a7e' }}>
-            © 2025 Cokatoo. All rights reserved.
+        <div className="pt-8 border-t" style={{ borderColor: w20 }}>
+          <p className="text-sm" style={{ color: w50 }}>
+            Copyright 2026 CokatooApp Inc. All rights reserved.
           </p>
         </div>
       </div>
@@ -1188,16 +1014,16 @@ export default function Home() {
     <div className="min-h-screen overflow-x-hidden">
       <Navbar />
       <main>
-        <Hero />
-        <CuriositySection />
-        <HowItWorks />
-        <TrackOrder />
-        <DoMore />
-        <TrustSection />
-        <Testimonials />
-        <Waitlist />
+        <Hero />           {/* purple */}
+        <CuriositySection />{/* white  */}
+        <HowItWorks />     {/* purple */}
+        <TrackOrder />     {/* white  */}
+        <DoMore />         {/* purple */}
+        <TrustSection />   {/* white  */}
+        <Testimonials />   {/* purple */}
+        <Waitlist />       {/* white  */}
       </main>
-      <Footer />
+      <Footer />           {/* purple */}
     </div>
   )
 }
