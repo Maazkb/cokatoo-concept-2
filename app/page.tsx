@@ -77,7 +77,7 @@ function Navbar() {
         <a href="#" className="flex items-center">
           <div className="relative h-9 w-32">
             <Image
-              src="/1x/Asset%2028.png"
+              src="/1x/Asset%2065.png"
               alt="Cokatoo"
               fill
               className="object-contain object-left"
@@ -1132,7 +1132,7 @@ function Footer() {
           <div className="flex-1">
             <div className="relative h-8 w-32 mb-4">
               <Image
-                src="/1x/Asset%2028.png"
+                src="/1x/Asset%2065.png"
                 alt="Cokatoo"
                 fill
                 className="object-contain object-left brightness-0 invert"
