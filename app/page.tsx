@@ -31,10 +31,10 @@ import {
 // ─── Brand tokens ─────────────────────────────────────────────────────────────
 
 const B = {
-  primary: '#3B285F',
-  accent: '#8565A6',
+  primary: '#6D5A8D',
+  accent: '#6D5A8D',
   dark: '#1a0f2e',
-  light: '#f5f0ff',
+  light: '#f0ebf7',
   white: '#FFFFFF',
 } as const
 
@@ -66,8 +66,11 @@ function Navbar() {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-50 bg-white transition-shadow duration-300"
-      style={{ boxShadow: scrolled ? '0 2px 20px rgba(59,40,95,0.10)' : 'none' }}
+      className="fixed inset-x-0 top-0 z-50 transition-shadow duration-300"
+      style={{
+        backgroundColor: B.primary,
+        boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.25)' : 'none',
+      }}
       initial={{ y: -72, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease }}
@@ -75,15 +78,9 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between h-16">
         {/* Logo */}
         <a href="#" className="flex items-center">
-          <div className="relative h-9 w-32">
-            <Image
-              src="/1x/Asset%2065.png"
-              alt="Cokatoo"
-              fill
-              className="object-contain object-left"
-              priority
-            />
-          </div>
+          <span className="text-xl font-semibold text-white tracking-tight">
+            cokatoo
+          </span>
         </a>
 
         {/* Desktop nav */}
@@ -92,8 +89,7 @@ function Navbar() {
             <a
               key={link}
               href="#"
-              className="px-4 py-2 text-sm font-semibold rounded-lg transition-opacity hover:opacity-70"
-              style={{ color: B.primary }}
+              className="px-4 py-2 text-sm font-semibold text-white rounded-lg transition-opacity hover:opacity-75"
             >
               {link}
             </a>
@@ -104,15 +100,14 @@ function Navbar() {
         <div className="flex items-center gap-3">
           <a
             href="#waitlist"
-            className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-full text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: B.primary }}
+            className="hidden md:inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-full transition-opacity hover:opacity-90"
+            style={{ backgroundColor: B.white, color: B.primary }}
           >
             Explore
           </a>
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2 rounded-lg"
-            style={{ color: B.primary }}
+            className="md:hidden p-2 rounded-lg text-white"
             aria-label="Toggle menu"
           >
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -129,24 +124,26 @@ function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22 }}
-            className="md:hidden overflow-hidden border-t bg-white"
-            style={{ borderColor: 'rgba(59,40,95,0.10)' }}
+            className="md:hidden overflow-hidden border-t"
+            style={{
+              backgroundColor: B.primary,
+              borderColor: 'rgba(255,255,255,0.15)',
+            }}
           >
             <nav className="px-5 py-4 flex flex-col gap-1">
               {['About', 'Contact'].map((link) => (
                 <a
                   key={link}
                   href="#"
-                  className="px-3 py-2.5 text-sm font-semibold rounded-lg"
-                  style={{ color: B.primary }}
+                  className="px-3 py-2.5 text-sm font-semibold rounded-lg text-white hover:opacity-75 transition-opacity"
                 >
                   {link}
                 </a>
               ))}
               <a
                 href="#waitlist"
-                className="mt-2 py-3 text-sm font-semibold rounded-xl text-center text-white"
-                style={{ backgroundColor: B.primary }}
+                className="mt-2 py-3 text-sm font-semibold rounded-xl text-center"
+                style={{ backgroundColor: B.white, color: B.primary }}
               >
                 Explore
               </a>
